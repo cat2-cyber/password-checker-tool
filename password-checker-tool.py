@@ -1,6 +1,7 @@
 import re
 import hashlib
 import requests
+import csv
 
 # Function to check if a password is compromised using Pwned Passwords API
 def check_pwned_password(password):
@@ -70,7 +71,6 @@ def process_file(file_path):
     return results
 
 # Export results to CSV file
-import csv
 def export_to_csv(results, output_file):
     with open(output_file, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
@@ -81,7 +81,10 @@ def export_to_csv(results, output_file):
 
 # Main function to handle file input and output
 def main():
-    file_path = r"C:\Users\Lily\Desktop\passwords.txt"  # Example file path
+    # Prompt user for input file and output file paths
+    file_path = input("Enter the path to the password file: ").strip()
+    output_file = input("Enter the path for the output CSV file: ").strip()
+    
     results = process_file(file_path)
     
     # Print the results
@@ -89,8 +92,9 @@ def main():
         print(f"Password: {password} -> {'Strong' if result['is_strong'] else 'Weak'}: {result['message']}")
         print(f"Pwned Status: {'Yes' if result['is_pwned'] else 'No'} - {result['pwned_message']}")
     
-    # Optionally, export results to a CSV file
-    export_to_csv(results, r"C:\Users\Lily\Desktop\password_check_results.csv")
+    # Export results to a CSV file
+    export_to_csv(results, output_file)
+    print(f"Results exported to {output_file}")
 
 if __name__ == "__main__":
     main()
